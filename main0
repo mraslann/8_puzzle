@@ -1,0 +1,74 @@
+from locale import *
+import numpy as np
+
+
+def my_func():
+    initialState = "320457861"
+    goal = "012345678"
+    column = "000111222"
+    row = "012012012"
+    children = "232343232"
+    #  stateHeuristic = calcH(initialState, column, row)
+    print(getpos(initialState))
+    getChildren(initialState, column, row, children)
+    print("Value inside function:", initialState)
+
+
+def calcH(state, column, row):  ##O(n)
+    distance = 0
+    for index, state in enumerate(state):
+        distance += abs(atoi(column[index]) - atoi(column[atoi(state[0])])) + abs(
+            atoi(row[index]) - atoi(row[atoi(state[0])]))
+        print(distance, state)
+    return distance
+
+
+def getChildren(state, column, row, children,heuristic):
+    children = []
+    poszero = getpos(state)
+    if column[poszero] == "2":
+        Ctemppos = atoi(column[poszero]) - 1
+        tempIndex = poszero - 3
+        children.append(swap(state, tempIndex, poszero))
+    elif column[poszero] == "0":
+        Ctemppos = atoi(column[poszero]) + 1
+        tempIndex = poszero + 3
+        children.append(swap(state, tempIndex, poszero))
+    else:
+        Ctemppos = atoi(column[poszero]) - 1
+        tempIndex = poszero - 3
+        children.append(swap(state, tempIndex, poszero))
+        Ctemppos = atoi(column[poszero]) + 1
+        tempIndex = poszero + 3
+        children.append(swap(state, tempIndex, poszero))
+
+    if row[poszero] == "2":
+        Rtemppos = atoi(row[poszero]) - 1
+        tempIndex = poszero - 1
+        children.append(swap(state, tempIndex, poszero))
+    elif row[poszero] == "0":
+        Rtemppos = atoi(row[poszero]) + 1
+        tempIndex = poszero + 1
+        children.append(swap(state, tempIndex, poszero))
+    else:
+        Rtemppos = atoi(row[poszero]) - 1
+        tempIndex = poszero - 1
+        children.append(swap(state, tempIndex, poszero))
+        Rtemppos = atoi(row[poszero]) + 1
+        tempIndex = poszero + 1
+        children.append(swap(state, tempIndex, poszero))
+    print(children)
+
+def swap(string, i, j):
+    string = list(string)
+    string[i], string[j] = string[j], string[i]
+    return ''.join(string)
+
+
+def getpos(currentstate):
+    for i in currentstate:
+        if "0" == i:
+            return currentstate.index(i)
+
+
+my_func()
