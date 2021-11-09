@@ -1,9 +1,14 @@
-#Class node implementation
+# Class node implementation
 class Node:
-    def __init__(self, key):
-        self.left = None
-        self.right = None
-        self.val = key
+    def __init__(self, currentnode, previousnode, g, h, dir):
+        self.currentnode = currentnode
+        self.previousnode = previousnode
+        self.g = g
+        self.h = h
+        self.dir = dir
+
+    def f(self):
+        return self.g+self.h
 
 
 # Insertion function in BST
@@ -18,3 +23,10 @@ def insert(root, key):
         else:
             root.left = insert(root.left, key)
     return root
+
+
+def inorder(root):
+    if root:
+        inorder(root.left)
+        print(root.val)
+        inorder(root.right)
