@@ -1,123 +1,135 @@
+import DFSSearch
+import time
+import Node
 import random
-import Tree
 
-# generating random string with 9 digits to represent all tiles ( 0 for empty tile )
-initialState = ''.join(random.sample("012345678", 9))
-print(initialState)
+
 goalState = "123456780"
-root = None
+initialstate = ''.join(random.sample("012345678", 9))
+print("initialstate is ", initialstate)
+# Python3 program to check if a given
+# instance of 8 puzzle is solvable or not
 
-def converttostring(current):
-    # initialize an empty string
-    str = ""
+# Python 3 program to count inversions in an array
 
-    # traverse in the string
-    for i in current:
-        str += i
-
-        # return string
-    return str
-# function to get the posistion of an element in the state
-def getpos(currentstate, element):
-    for i in currentstate:
-        if element == i:
-            return (currentstate.index(i))
+# Function to Use Inversion Count
+def mergeSort(arr, n):
+    # A temp_arr is created to store
+    # sorted array in merge function
+    temp_arr = [0] * n
+    return _mergeSort(arr, temp_arr, 0, n - 1)
 
 
-def generatepossiblestates(currentstate):
-    possiblestates = []
-    position = getpos(currentstate, "0")
-    if position == 4:
-        j = 1
-        for i in range(0, 4):
-            current = list(currentstate)
-            current[j], current[4] = current[4], current[j]
-            current = converttostring(current)
-            possiblestates.append(current)
-            j = j + 2
-        print(possiblestates)
-    else:
-        if position == 0:
-            j = 1
-            for i in range(0, 2):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 3
-            print(possiblestates)
-        if position == 1:
-            j = 0
-            for i in range(0, 3):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 2
-            print(possiblestates)
-        if position == 2:
-            j = 1
-            for i in range(0, 2):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 4
-            print(possiblestates)
+# This Function will use MergeSort to count inversions
 
-        if position == 3:
-            j = 0
-            for i in range(0, 3):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                if j == 0:
-                    j = 4
-                else:
-                    j = j+2
-            print(possiblestates)
+def _mergeSort(arr, temp_arr, left, right):
+    # A variable inv_count is used to store
+    # inversion counts in each recursive call
 
-        if position == 5:
-            j = 2
-            for i in range(0, 3):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                if j == 4:
-                    j = j + 4
-                else:
-                    j = j + 2
-            print(possiblestates)
-        if position == 6:
-            j = 3
-            for i in range(0, 2):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 4
-            print(possiblestates)
+    inv_count = 0
 
-        if position == 7:
-            j = 4
-            for i in range(0, 3):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 2
-            print(possiblestates)
+    # We will make a recursive call if and only if
+    # we have more than one elements
 
-        if position == 8:
-            j = 5
-            for i in range(0, 2):
-                current = list(currentstate)
-                current[j], current[position] = current[position], current[j]
-                current = converttostring(current)
-                possiblestates.append(current)
-                j = j + 2
-            print(possiblestates)
+    if left < right:
+        # mid is calculated to divide the array into two subarrays
+        # Floor division is must in case of python
 
-generatepossiblestates(initialState)
+        mid = (left + right) // 2
+
+        # It will calculate inversion
+        # counts in the left subarray
+
+        inv_count += _mergeSort(arr, temp_arr,
+                                left, mid)
+
+        # It will calculate inversion
+        # counts in right subarray
+
+        inv_count += _mergeSort(arr, temp_arr,
+                                mid + 1, right)
+
+        # It will merge two subarrays in
+        # a sorted subarray
+
+        inv_count += merge(arr, temp_arr, left, mid, right)
+    return inv_count
+
+
+# This function will merge two subarrays
+# in a single sorted subarray
+def merge(arr, temp_arr, left, mid, right):
+    i = left  # Starting index of left subarray
+    j = mid + 1  # Starting index of right subarray
+    k = left  # Starting index of to be sorted subarray
+    inv_count = 0
+
+    # Conditions are checked to make sure that
+    # i and j don't exceed their
+    # subarray limits.
+
+    while i <= mid and j <= right:
+
+        # There will be no inversion if arr[i] <= arr[j]
+
+        if arr[i] <= arr[j]:
+            temp_arr[k] = arr[i]
+            k += 1
+            i += 1
+        else:
+            # Inversion will occur.
+            temp_arr[k] = arr[j]
+            inv_count += (mid - i + 1)
+            k += 1
+            j += 1
+
+    # Copy the remaining elements of left
+    # subarray into temporary array
+    while i <= mid:
+        temp_arr[k] = arr[i]
+        k += 1
+        i += 1
+
+    # Copy the remaining elements of right
+    # subarray into temporary array
+    while j <= right:
+        temp_arr[k] = arr[j]
+        k += 1
+        j += 1
+
+    # Copy the sorted subarray into Original array
+    for loop_var in range(left, right + 1):
+        arr[loop_var] = temp_arr[loop_var]
+
+    return inv_count
+
+
+# This code is contributed by ankush_953
+
+
+# A utility function to count
+# inversions in given array 'arr[]'
+
+# This function returns true
+# if given 8 puzzle is solvable.
+def isSolvable(initialstate):
+    puzzle = list(initialstate)
+    inv_count = mergeSort(puzzle, len(puzzle))
+
+    # return true if inversion count is even.
+    return (inv_count % 2 == 0)
+
+
+# Driver code
+if (isSolvable(initialstate)):
+    print("not Solvable")
+    # exit()
+else:
+    print("Solvable")
+
+starttime = time.time()
+(dfs, steps) = DFSSearch.dfs(initialstate, goalState)
+endtime = time.time()
+print("(dfs)" + dfs + " in time " + str(endtime-starttime) + " and in " + str(steps) + " steps")
+
+
