@@ -10,12 +10,11 @@ class Node:
         self.h = h
 
     def f(self):
-        return self.g + self.h
+        return self.g+self.h
 
 
 def my_func(initialstate):
     # generating random string with 9 digits to represent all tiles ( 0 for empty tile )
-    goal = "012345678"
     column = "000111222"
     row = "012012012"
     children = "232343232"
@@ -24,7 +23,7 @@ def my_func(initialstate):
     return possiblestates
 
 
-def calcH(state, column, row):  # O(n)
+def calcH(state, column, row):
     distance = 0
     for index, state in enumerate(state):
         distance += abs(atoi(column[index]) - atoi(column[atoi(state[0])])) + abs(
@@ -61,7 +60,6 @@ def getChildren(state, column, row, children):
         children.append(swap(state, tempIndex, poszero))
     return children
 
-
 def swap(string, i, j):
     string = list(string)
     string[i], string[j] = string[j], string[i]
@@ -69,4 +67,6 @@ def swap(string, i, j):
 
 
 def getpos(currentstate):
-    return currentstate.index("0")
+    for i in currentstate:
+        if "0" == i:
+            return currentstate.index("0")
