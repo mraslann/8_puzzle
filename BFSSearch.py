@@ -1,16 +1,5 @@
 import Node
-
-
-def solution(state, parent_map):
-    sol = []
-    cost_to_goal = 0
-    while parent_map[state]:
-        sol.append(state)
-        state = parent_map[state]
-        cost_to_goal += 1
-    sol.reverse()
-    return sol
-
+#Implementation of BFS search
 
 def BFS(current_state, goal_state):
     queue = []
@@ -26,8 +15,8 @@ def BFS(current_state, goal_state):
         explored.add(state)
         steps += 1
         if goal_state == state:
-            sol = solution(state, parent_map)
-            return "Success", steps, len(sol), sol
+            sol = Node.solution(state, parent_map)
+            return steps, len(sol), sol
         else:
             neighbours = Node.my_func(state)
             for neighbour in neighbours:
@@ -35,4 +24,5 @@ def BFS(current_state, goal_state):
                     frontier.add(neighbour)
                     queue.append(neighbour)
                     parent_map[neighbour] = state
-    return "Failed", steps, 0, 0
+    print("This puzzle has no solution")
+    exit(0)

@@ -1,16 +1,5 @@
 import Node
-
-
-def solution(state, parent_map):
-    sol = []
-    cost_to_goal = 0
-    while parent_map[state]:
-        sol.append(state)
-        state = parent_map[state]
-        cost_to_goal += 1
-    sol.reverse()
-    return sol
-
+#Implementation of DFS search
 
 def dfs(initialState, goalState):
     stack = []
@@ -25,14 +14,11 @@ def dfs(initialState, goalState):
         explored.add(currentstate)
         steps += 1
         if currentstate == goalState:
-            sol = solution(currentstate, parent_map)
-            print("final state (goal state) is ", currentstate)
-            return "Success", steps, len(sol), sol
+            sol = Node.solution(currentstate, parent_map)
+            return steps, len(sol), sol
         possiblestates = Node.my_func(currentstate)
         for states in possiblestates:
             if (states not in frontier) and (states not in explored):
                 stack.append(states)
                 frontier.add(states)
                 parent_map[states] = currentstate
-    return "Failed", steps, 0, 0
-

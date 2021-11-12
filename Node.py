@@ -10,7 +10,7 @@ class Node:
         self.h = h
 
     def f(self):
-        return self.g+self.h
+        return self.g + self.h
 
 
 def my_func(initialstate):
@@ -18,7 +18,6 @@ def my_func(initialstate):
     column = "000111222"
     row = "012012012"
     children = "232343232"
-    #  stateHeuristic = calcH(initialState, column, row)
     possiblestates = getChildren(initialstate, column, row, children)
     return possiblestates
 
@@ -33,6 +32,7 @@ def calcH(state, column, row):
 
 
 def getChildren(state, column, row, children):
+    #generation all possible children of the current state
     children = []
     poszero = getpos(state)
     if column[poszero] == "2":
@@ -60,6 +60,7 @@ def getChildren(state, column, row, children):
         children.append(swap(state, tempIndex, poszero))
     return children
 
+
 def swap(string, i, j):
     string = list(string)
     string[i], string[j] = string[j], string[i]
@@ -67,6 +68,17 @@ def swap(string, i, j):
 
 
 def getpos(currentstate):
+    #getting the position  of the 0 (empty tile) in the string
     for i in currentstate:
         if "0" == i:
             return currentstate.index("0")
+
+
+def solution(state, parent_map):
+    # function to get a list of the path taken from initial state to goal state
+    sol = []
+    while parent_map[state]:
+        sol.append(state)
+        state = parent_map[state]
+    sol.reverse()
+    return sol

@@ -1,53 +1,39 @@
-import BFSSearch
-import time
 import DFSSearch
+import time
 import random
+import BFSSearch
+import ASearch
 
+#generation of random initial states
 goalState = "012345678"
-initialstate = ''.join(random.sample("012345678", 9))
-print("initialstate is ", initialstate)
+initialstate = ''.join(random.sample("120345678", 9))
+print("Initial state is ", initialstate)
 
-
-# Python3 program to check if a given
-# instance of 8 puzzle is solvable or not
-
-# Python 3 program to count inversions in an array
-
-def getInvCount(arr):
-    inv_count = 0
-    empty_value = -1
-    for i in range(0, 9):
-        for j in range(i + 1, 9):
-            if arr[j] != empty_value and arr[i] != empty_value and arr[i] > arr[j]:
-                inv_count += 1
-    return inv_count
-
-
-# This function returns true
-# if given 8 puzzle is solvable.
-def isSolvable(puzzle):
-    # Count inversions in given 8 puzzle
-    inv_count = getInvCount([j for sub in puzzle for j in sub])
-
-    # return true if inversion count is even.
-    return (inv_count % 2 == 0)
-
-
-# Driver code
-if isSolvable(initialstate):
-    print("Solvable")
-else:
-    print("Not solvable")
-
-
+#using bfs to search
 starttime = time.time()
-(bfs, cost, steps1) = BFSSearch.BFS(initialstate, goalState)
+steps, soldepth, path = BFSSearch.BFS(initialstate, goalState)
 endtime = time.time()
-print(bfs)
-print(steps1)
-print("(BFS) in time " + str(endtime - starttime) + " and in " + str(cost) + " steps")
+print("BFS:\nRunning time: " + str("{:.2f}".format(endtime-starttime)) + " seconds \nNodes expanded: "
+      + str(steps) + " nodes \nMaximum depth: ", soldepth, "\nCost: ", soldepth, "\nPath to goal: ", path)
 
+#using dfs to search
 starttime = time.time()
-(dfs, steps) = DFSSearch.dfs(initialstate, goalState)
+steps, soldepth, path = DFSSearch.dfs(initialstate, goalState)
 endtime = time.time()
-print("(DFS)" + dfs + " in time " + str(endtime - starttime) + " and in " + str(steps) + " steps")
+print("DFS:\nRunning time: " + str("{:.2f}".format(endtime-starttime)) + " seconds \nNodes expanded: "
+      + str(steps) + " nodes \nMaximum depth: ", soldepth, "\nCost: ", soldepth, "\nPath to goal: ", path)
+
+#using A* (manhattan heuristic) to search
+starttime = time.time()
+steps1, soldepth1, sol1 = ASearch.A_star(initialstate, 'm')
+endtime = time.time()
+print("A* Manhattan:\nRunning time: " + str("{:.2f}".format(endtime-starttime)) + " seconds \nNodes expanded: "
+      + str(steps1) + " nodes \nMaximum depth: ", soldepth1, "\nCost: ", soldepth1, "\nPath to goal: ", sol1)
+
+#using A* (euclidian heuristic) to search
+starttime = time.time()
+steps2, soldepth2, sol2 = ASearch.A_star(initialstate, 'e')
+endtime = time.time()
+runningtime = endtime - starttime
+print("A* Euclidian:\nRunning time: " + str("{:.2f}".format(endtime-starttime)) + " seconds \nNodes expanded: "
+      + str(steps2) + " nodes \nMaximum depth: ", soldepth2, "\nCost: ", soldepth2, "\nPath to goal: ", sol2)
