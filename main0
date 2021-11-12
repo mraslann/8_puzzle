@@ -72,3 +72,133 @@ def getpos(currentstate):
 
 
 my_func()
+
+
+
+
+
+from datetime import datetime
+from locale import *
+import queue as q
+import heapdict
+
+import numpy as np
+
+
+class State:
+    def __init__(self, state, cost):
+        self.state = state
+        self.cost = cost
+        self.st = 'u'
+
+    def setSt(self, st):
+        self.st = st
+
+
+def my_func():
+    initialState = "103425786"
+    goal = "012345678"
+    column = "000111222"
+    row = "012012012"
+    children = "232343232"
+    A_star(initialState)
+
+
+def calcF(state, g):  ##O(n)
+    column = "000111222"
+    row = "012012012"
+    distance = 0
+    for index, state in enumerate(state):
+        distance += abs(atoi(column[index]) - atoi(column[atoi(state[0])])) + abs(
+            atoi(row[index]) - atoi(row[atoi(state[0])]))
+    #  print(distance+g, state)
+    return distance + g
+
+
+def getChildren(state, column, row, children):
+    children = []
+    poszero = getpos(state)
+    if column[poszero] == "2":
+        tempIndex = poszero - 3
+        children.append(swap(state, tempIndex, poszero))
+    elif column[poszero] == "0":
+        tempIndex = poszero + 3
+        children.append(swap(state, tempIndex, poszero))
+    else:
+        tempIndex = poszero - 3
+        children.append(swap(state, tempIndex, poszero))
+        tempIndex = poszero + 3
+        children.append(swap(state, tempIndex, poszero))
+
+    if row[poszero] == "2":
+        tempIndex = poszero - 1
+        children.append(swap(state, tempIndex, poszero))
+    elif row[poszero] == "0":
+        tempIndex = poszero + 1
+        children.append(swap(state, tempIndex, poszero))
+    else:
+        tempIndex = poszero - 1
+        children.append(swap(state, tempIndex, poszero))
+        tempIndex = poszero + 1
+        children.append(swap(state, tempIndex, poszero))
+    return children
+
+
+def swap(string, i, j):
+    string = list(string)
+    string[i], string[j] = string[j], string[i]
+    return ''.join(string)
+
+
+def getpos(currentstate):
+    return currentstate.index("0")
+
+
+def goalCheck(state):
+    if state == "012345678":
+        return 1
+
+
+def A_star(initialState):
+    currentState = initialState
+    g = 0
+    frontier2 = heapdict.heapdict()
+    frontier2[currentState] = calcF(currentState, 0)
+    SMap = {currentState: (g, 'f')}
+    ParentMap = {}
+    # v,p=frontier2.popitem()
+    # print(p)
+    while frontier2:
+        state, stateCost = frontier2.popitem()
+        SMap[state] = (g, 'e')
+        currentState = state
+        g = g + 1
+        if goalCheck(currentState):
+            #  sol = solution(currentState.state, ParentMap)
+            ## return sol
+            print(SMap[currentState])
+            exit(0)
+
+        for child in getChildren(currentState, "000111222", "012012012", "232343232"):
+            #  ParentMap = {child: (currentState, g)}
+            (cost, s) = SMap.get(child, (0, 'N'))
+            if s == 'N':
+              #  print('l')
+                ParentMap[child] = (currentState, g)
+                frontier2[child] = calcF(child, g)
+                SMap[child] = (g, 'f')
+            elif s == 'f':
+                #print('y')
+               # print(frontier2.get(child))
+                newChildCost = calcF(child, g)
+                Cost = frontier2.get(child)
+                if newChildCost < Cost:
+                    frontier2.__setitem__(child, newChildCost)
+                    #ParentMap.update()
+
+
+##change parent??
+
+##
+
+my_func()
